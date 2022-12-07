@@ -9,7 +9,7 @@ from sqlalchemy.schema import MetaData
 # Base is a class that we create that will be the supertype of each of our classes that
 # we map to a database table.  In making our classes subtypes of Base, we inherit a number
 # of useful utilities that make it much easier to access the database in Python.
-Base = declarative_base(metadata=MetaData(schema='key hook'))
+Base = declarative_base(metadata=MetaData(schema='key_hook'))
 
 # Think of metadata as a crib sheet that SQLAlchemy uses to keep track of all the
 # database objects that you create along the way in your application.  We could have called

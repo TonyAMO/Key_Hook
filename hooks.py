@@ -8,7 +8,7 @@ class hooks(Base):
     hook_id = Column('hook_id', Integer, nullable=False, primary_key=True)
 
     key = relationship('keys')
-    doors_list: [access] = relationship('access', back_populates='hooks', viewonly=False)
+    door_list: [access] = relationship('access', back_populates='hook', viewonly=False)
 
     def __init__(self, hi:Integer):
         self.hook_id=hi
