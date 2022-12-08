@@ -164,9 +164,27 @@ if __name__=='__main__':
             keyid = -1
             q = sess.query(issued_key.key_number).filter(issued_key.key_number == keyid)
             while not sess.query(q.exists()).scalar():
-                empid = int(input("\n\n\nEnter valid ID issued: "))
+                keyd = int(input("\n\n\nEnter valid key ID issued to employee: "))
                 q = sess.query(issued_key.key_number).filter(issued_key.key_number == keyid)
             print("\nReporting key as lost...\n")
             lost: lost_key = lost_key()
+            sess.add(lost)
+            sess.commit()
+            print("\nKey "+f'{keyid}'+" Reported lost at: "+f'{lost.request_date}'), print()
+            updt = sess.update(employees).where(employees.id==empid).values(fine=employees.fine+25)
+            engine.execute(updt)
+            print(f'{empid}'+" was fined $25")
+        elif option=="e":
+            print("Report out all the rooms an employee can enter given the keys they already have")
+            empid = -1
+            q = sess.query(issued_key.employee_id).filter(issued_key.employee_id == empid)
+            while not sess.query(q.exists()).scalar():
+                empid = int(input("\n\n\nEnter valid employee ID: "))
+                q = sess.query(issued_key.employee_id).filter(issued_key.employee_id == empid)
+            request_list = sess.query(issued_key.employee_id).filter(issued_key.employee_id==empid).all()
+            request_list = [employee_id for employee_id, in request_list]
+            result = sess.query(room_requests.room_number).filter(room_requests.request_id.in_(request_list)).all()
+            print("\nEmployee "+f'{empid}'+" has access to rooms: "+f'{result}')
+            
         else:
             print('Choose another option')
