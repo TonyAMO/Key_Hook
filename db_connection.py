@@ -22,6 +22,8 @@ postgres            The ID used for logging into the database.  When you install
 postgres            The name of the database."""
 db_url = "postgresql+psycopg2://postgres:NeoGeoFanbase#1@localhost:5432/postgres"
 
+#   du_url = <insert your url here and comment mine out>
+
 # Create the database engine that we will use for all of our work.  This does not actually connect
 # just yet, it is more like a connection prototype that we actually fire up when we create a session.
 engine = create_engine(db_url, pool_size=5, pool_recycle=3600, echo=True)

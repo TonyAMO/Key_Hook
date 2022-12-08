@@ -80,6 +80,9 @@ if __name__=='__main__':
         #     print(e)
         #
         # sess.delete(e1)
+
+
+
         option = str(input('''Choose an option:
         \ta. Create a key
         \tb. Request access to a room
@@ -185,6 +188,83 @@ if __name__=='__main__':
             request_list = [employee_id for employee_id, in request_list]
             result = sess.query(room_requests.room_number).filter(room_requests.request_id.in_(request_list)).all()
             print("\nEmployee "+f'{empid}'+" has access to rooms: "+f'{result}')
-            
+        elif option=="f":
+            print("Delete a key")
+            kid = int(input("\n\n\nEnter valid key ID to delete: "))
+            try:
+                delete_lost = sess.query(lost_key).filter(lost_key.key_number==kid).all()
+                for obj in delete_lost:
+                    sess.delete(obj)
+            except:
+                print("No key was found")
+            try:
+                delete_issued = sess.query(issued_key).filter(issued_key.key_number==kid).all()
+            except:
+                print("No key was found")
+            delete_user = sess.query(keys).filter(keys.serial_number==kid).all()
+            for obj in delete_user:
+                sess.delete(obj)
+            sess.commit()
+            print("\nKey deleted")
+        elif option=="g":
+            print("Delete an employee")
+            empid = -1
+            q = sess.query(issued_key.employee_id).filter(issued_key.employee_id==empid)
+            while not sess.query(q.exists()).scalar():
+                empid = int(input("\n\n\nEnter valid employee ID: "))
+                q = sess.query(issued_key.employee_id).filter(issued_key.employee_id == empid)
+            #delete employee in lost key
+            d_emp_lost = sess.query(lost_key).filter(lost_key.employee_id==empid).all()
+            for obj in d_emp_lost:
+                sess.delete(obj)
+                print("Deleted employee in lost key")
+            #delete employee in issued key
+            d_emp_iss = sess.query(issued_key).filter(issued_key.employee_id==empid).all()
+            for obj in d_emp_iss:
+                sess.delete(obj)
+                print("Deleted employee in issued key")
+            #delete employee in room request
+            d_emp_rr = sess.query(room_requests).filter(room_requests.employee_id==empid).all()
+            for obj in d_emp_rr:
+                sess.delete(obj)
+                print("Deleted employee in room request")
+            #delete employee in employee
+            d_emp = sess.query(employees).filter(employees.id == empid).all()
+            for obj in d_emp:
+                sess.delete(obj)
+                print("Deleted employee")
+            sess.commit()
+        elif option=="h":
+            print("add a new door that can be opened by existing hook")
+            building_name=""
+            #cehck valid building
+            q = sess.query(building.name).filter(building.name==building_name)
+            while not sess.query(q.exists()).scalar():
+                building_name=input("\nWhat is the building name?").upper()
+                q = sess.query(building.name).filter(building.name == building_name)
+            room_number = -1
+            q = sess.query(rooms.number).filter(rooms.number == room_number)
+            while not sess.query(q.exists()).scalar():
+                room_number=int(input("\nwhat is the room number?"))
+                q = sess.query(rooms.number).filter(rooms.number == room_number)
+            door_name=""
+            q = sess.query(door_formats.name).filter(door_formats.name == door_name)
+            while not sess.query(q.exists()).scalar():
+                door_name=input("\nwhat is the door name?")
+                q = sess.query(door_formats.name).filter(door_formats.name == door_name)
+            room: rooms=rooms(room_number, building_name)
+            door: doors=doors(room, door_name)
+            sess.add(door)
+            sess.commit()
+            print("door created in "+f'{building_name}'+" "+f'{room_number}')
+        elif option=="i":
+            print("Update access request to move to new employee")
+            rr = -1
+            #check valid id
+            q = sess.query(room_requests.request_id).filter(room_requests.request_id==rr)
+            while not sess.query(q.exists()).scalar():
+                rr = int(input("\n\n\nEnter valid request ID to move to different employee: "))
+                q = sess.query(room_requests.request_id).filter(room_requests.request_id == rr)
+            prev_empid=sess.query(room_requests.employee_id).filter(room_requests.)
         else:
             print('Choose another option')

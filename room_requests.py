@@ -7,7 +7,7 @@ from datetime import date
 
 class room_requests(Base):
     __tablename__= "room_requests"
-    request_id = Column('request_id', Integer, Identity(start=1, cycle=True), nullable=False)
+    # request_id = Column('request_id', Integer, Identity(start=1, cycle=True), nullable=False)
     request_date = Column('request_date', Date, nullable=False,primary_key=True)
     employee_id = Column(Integer, ForeignKey('employees.id'), nullable=False, primary_key=True)
     room_number = Column(Integer, nullable=False, primary_key=True)

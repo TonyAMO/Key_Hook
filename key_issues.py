@@ -9,7 +9,7 @@ class key_issues(Base):
     __tablename__='key_issues'
     issue_time = Column('issue_time', Time, nullable=False)
     issue_date = Column('issue_date', Date, nullable=False)
-    key_number = Column(Integer, ForeignKey('keys.serial_number'), nullable=False, primary_key=True)
+    key_number = Column(Integer, ForeignKey('keys.serial_number'), nullable=False)
     request_date = Column(Date, nullable=False, primary_key=True)
     employee_id = Column(Integer, nullable=False, primary_key=True)
     building_name = Column(String(5), nullable=False, primary_key=True)

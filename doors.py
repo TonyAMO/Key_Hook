@@ -5,7 +5,7 @@ from access import access
 
 class doors(Base):
     __tablename__='doors'
-    door_id = Column('request_id', Integer, Identity(start=1, cycle=True), nullable=False, primary_key=True)
+    # door_id = Column('request_id', Integer, Identity(start=1, cycle=True), nullable=False, primary_key=True)
     door_name = Column(String(20), ForeignKey('door_formats.name'), nullable=False, unique=True)
     room_number = Column(Integer, nullable=False, primary_key=True, unique=True)
     building_name = Column(String(5), nullable=False, primary_key=True, unique=True)
