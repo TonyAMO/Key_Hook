@@ -5,19 +5,18 @@ from room_requests import room_requests
 
 class rooms(Base):
     __tablename__='rooms'
-    number = Column('number', Integer, nullable=False, primary_key=True, unique=True)
-    building_name = Column(String(5), ForeignKey('building.name'), nullable=False, primary_key=True, unique=True)
+    number = Column('number', Integer, nullable=False, primary_key=True)
+    building_name = Column(String(5), ForeignKey('building.name'), nullable=False, primary_key=True)
 
-    table_args = (UniqueConstraint('number', 'building_name', name='rooms_uk_01'))
+    #table_args = (UniqueConstraint('number', 'building_name', name='rooms_uk_01'))
 
     door = relationship('doors')
     build = relationship("building", back_populates="room")
     employee_list:[room_requests] = relationship('room_requests', back_populates='room', viewonly=False)
 
-    def __init__(self, num:Integer, building):
+    def __init__(self, num:Integer, nam:String):
         self.number=num
-        self.building_name=building.name
-        self.building=building
+        self.building_name=nam
         self.employee_list=[]
 
     def add_employee(self, employee):

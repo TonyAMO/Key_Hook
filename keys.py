@@ -1,19 +1,17 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, ForeignKeyConstraint, Date
+from sqlalchemy import Column, Sequence, String, Integer, ForeignKey, ForeignKeyConstraint, Date
 from sqlalchemy.orm import relationship
 from orm_base import Base
 from key_issues import key_issues
 
 class keys(Base):
     __tablename__ = "keys"
-    serial_number = Column('serial_number', Integer, nullable=False, primary_key=True)
-    hook_id = Column(Integer, ForeignKey('hooks.hook_id'), nullable=False)
+    serial_number = Column('serial_number', Integer, primary_key=True)
+    hook_id = Column(ForeignKey('hooks.hook_id'), nullable=False)
 
-    #request_key: [key_issues]
+    employee_list: [key_issues] = relationship('key_issues', back_populates='key', viewonly=False)
 
-    def __init__(self, sn:Integer, hook):
-        self.serial_number=sn
-        self.hook_id=hook.hook_id
-        self.hook=hook
+    # def __init__(self, hook):
+    #     self.hook_id=hook.hook_id
         #self.request_key=[]
 
     # def add_request(self, request):
@@ -28,4 +26,4 @@ class keys(Base):
     #     self.request_key.append(ki)
 
     def __str__(self):
-        return "Key: {key_number}".format(key_number = self.serial_number)
+        return "Key: {key_number}, Hook: {}".format(key_number = self.serial_number, hook_id=self.hook_id)

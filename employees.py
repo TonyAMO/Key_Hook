@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DECIMAL, UniqueConstraint, ForeignKey, ForeignKeyConstraint, Time, Date, Identity
+from sqlalchemy import Column, String, Sequence, Integer, DECIMAL, UniqueConstraint, ForeignKey, ForeignKeyConstraint, Time, Date, Identity
 from sqlalchemy.orm import relationship
 from orm_base import Base
 from room_requests import room_requests
@@ -6,15 +6,15 @@ from key_issues import key_issues
 
 class employees(Base):
     __tablename__='employees'
-    id = Column('id', Integer, nullable=False, primary_key=True)
+    id = Column('id', Integer, primary_key=True)
     name = Column('name', String(50), nullable=False)
     fine = Column('fine', DECIMAL(10, 2), nullable=False)
 
 
     room_list:[room_requests] = relationship('room_requests', back_populates='employee', viewonly=False)
+    key_list: [key_issues] = relationship('key_issues', back_populates='employee', viewonly=False)
 
-    def __init__(self, id:Integer, n:String, f:DECIMAL(10,2)):
-        self.id = id
+    def __init__(self, n:String, f:DECIMAL(10,2)):
         self.name=n
         self.fine=f
         self.room_list=[]

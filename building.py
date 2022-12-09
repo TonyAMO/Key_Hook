@@ -12,4 +12,4 @@ class building(Base):
         self.name=name
 
     def __str__(self):
-        return "Building: {building_name}".format(building_name = self.name)
+        return self.name

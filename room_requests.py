@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Identity, ForeignKey, UniqueConstraint, ForeignKeyConstraint, Date
+from sqlalchemy import Column, String, Sequence, Integer, Identity, ForeignKey, UniqueConstraint, ForeignKeyConstraint, Date
 from sqlalchemy.orm import relationship
 from orm_base import Base
 from datetime import date
@@ -7,11 +7,11 @@ from datetime import date
 
 class room_requests(Base):
     __tablename__= "room_requests"
-    # request_id = Column('request_id', Integer, Identity(start=1, cycle=True), nullable=False)
-    request_date = Column('request_date', Date, nullable=False,primary_key=True)
-    employee_id = Column(Integer, ForeignKey('employees.id'), nullable=False, primary_key=True)
-    room_number = Column(Integer, nullable=False, primary_key=True)
-    building_name = Column(String(5), nullable=False, primary_key=True)
+    request_id = Column('request_id', Integer, primary_key=True)
+    request_date = Column('request_date', Date, nullable=False)
+    employee_id = Column(Integer, ForeignKey('employees.id'))
+    room_number = Column(Integer, nullable=False)
+    building_name = Column(String(5), nullable=False)
 
 
     __table_args__ = (ForeignKeyConstraint([room_number, building_name],
@@ -27,12 +27,11 @@ class room_requests(Base):
     room = relationship("rooms", back_populates='employee_list')
     employee = relationship("employees", back_populates='room_list')
 
-    def __init__(self,  employee, room):
-        self.employee_id=employee.id
+    def __init__(self,  id:Integer, room):
+        self.employee_id=id
         self.room_number=room.number
         self.building_name=room.building_name
         self.request_date=date.today()
-        self.employee=employee
         self.room=room
 
     # def add_key(self, key):
