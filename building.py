@@ -6,7 +6,7 @@ class building(Base):
     __tablename__='building'
     name = Column('name', String(5), nullable=False, primary_key=True)
 
-    room = relationship('rooms', back_populates='build')
+    room = relationship('rooms')
 
     def __init__(self, name:String):
         self.name=name

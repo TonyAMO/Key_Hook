@@ -35,23 +35,24 @@ if __name__=='__main__':
     # those tables for us.
     metadata.create_all(bind=engine)
 
-    b1: building = building('ECS')
-    r1: rooms = rooms(308, )
-    h1: hooks = hooks()
+
+    #r1: rooms = rooms(308)
+    #h1: hooks = hooks()
     # k1: keys = keys(123456, h1)
-    e1: employees = employees('David Brown', 0.00)
+    # e1: employees = employees('David Brown', 0.00)
     # rr1: room_requests = room_requests(e1,r1)
     # ki1: key_issues = key_issues(rr1,k1)
     # ik1: issued_key = issued_key(ki1)
     # lk1: lost_key = lost_key(ki1)
 
     with Session() as sess:
-        # sess.begin()
+        sess.begin()
+        b1: building = building('ECS')
         sess.add(b1)
-        sess.add(r1)
-        sess.add(h1)
-        # sess.add(k1)
-        sess.add(e1)
+        # sess.add(r1)
+        # sess.add(h1)
+        # # sess.add(k1)
+        # sess.add(e1)
         # sess.add(rr1)
         # sess.add(ki1)
         #sess.commit()
@@ -96,7 +97,7 @@ if __name__=='__main__':
             \tq. Quit
             \n\nOption: '''))
 
-
+            op=op.lower()
             if option=='a':
                 print("Creating a key")
                 hook=0
@@ -129,9 +130,9 @@ if __name__=='__main__':
                 while not sess.query(q.exists()).scalar():
                     rn=input("\n\n\nRoom number you want to access: ")
                     q = sess.query(rooms.number).filter(rooms.number == rn)
-                rom: rooms = rooms(num=rn, nam=bn)
+                room: rooms = rooms(num=rn, bn=bn)
                 print("\nCreating room request...\n")
-                request: room_requests=room_requests(empid, rom)
+                request: room_requests=room_requests(id=empid, room=room)
                 sess.add(request)
                 sess.commit()
 
@@ -151,7 +152,7 @@ if __name__=='__main__':
                                               room_requests.building_name==door.building_name,
                                               keys.hook_id==acc.hook_id).scalar()
                 print("\nIssuing key...\n")
-                issue: key_issues = key_issues(request_id=rr, key=key)
+                issue: key_issues = key_issues(rid=request, eid=request.employee_id, key=key)
                 sess.add(issue)
                 sess.commit()
                 print("\nKey ("+f'{key.key_number}'+") issued to employee ID: "+f'{issue.employee_id}'
@@ -277,7 +278,7 @@ if __name__=='__main__':
                 while not sess.query(q.exists()).scalar():
                     empid = int(input("\n\n\nEnter valid employee ID to move request to: "))
                     q = sess.query(employees.id).filter(employees.id == empid)
-                updt = sess.update(room_requests).where(room_requests.request_id==rr).values(request_date=datetime.now(), employee_id=empid)
+                updt = sess.update(room_requests).where(room_requests.request_id==rr).values(request_date=date.today(), employee_id=empid)
                 engine.execute(updt)
                 print("\nRequest "+f'{rr}'+"updated from employee "+f'{prev_empid}'+" to employee "+f'{empid}')
 

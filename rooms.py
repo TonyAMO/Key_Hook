@@ -6,30 +6,19 @@ from room_requests import room_requests
 class rooms(Base):
     __tablename__='rooms'
     number = Column('number', Integer, nullable=False, primary_key=True)
-    building_name = Column(String(5), ForeignKey('building.name'), nullable=False, primary_key=True)
+    building_name = Column(String(5), nullable=False, primary_key=True)
 
-    #table_args = (UniqueConstraint('number', 'building_name', name='rooms_uk_01'))
+    table_args = (ForeignKeyConstraint([building_name],['building.name'],{}))
+    table_args1 = (UniqueConstraint(number, building_name, name='rooms_uk_01'))
 
-    door = relationship('doors')
-    build = relationship("building", back_populates="room")
-    employee_list:[room_requests] = relationship('room_requests', back_populates='room', viewonly=False)
+    # door = relationship('doors')
+    # build = relationship("building", back_populates="room")
 
-    def __init__(self, num:Integer, nam:String):
+    def __init__(self, num:Integer, bn:String):
         self.number=num
-        self.building_name=nam
-        self.employee_list=[]
+        self.building_name=bn
 
-    def add_employee(self, employee):
-        # make sure this genre is non already on the list.
-        for next_employee in self.employee_list:
-            if next_employee == employee:
-                return
-        # Create an instance of the junction table class for this relationship.
-        rr = room_requests(employee, self)
-        # Update this move to reflect that we have this genre now.
-        employee.room_list.append(rr)
-        # Update the genre to reflect this movie.
-        self.employee_list.append(rr)
+
 
     def __str__(self):
         return "Room: {building_name} {room_number}".format(building_name = self.building_name, room_number=self.number)

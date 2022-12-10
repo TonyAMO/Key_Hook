@@ -7,25 +7,21 @@ from datetime import date
 
 class room_requests(Base):
     __tablename__= "room_requests"
-    request_id = Column('request_id', Integer, primary_key=True)
+    request_id = Column('request_id', Integer,Identity(start=1000, cycle=True), nullable=False, primary_key=True)
     request_date = Column('request_date', Date, nullable=False)
-    employee_id = Column(Integer, ForeignKey('employees.id'))
+    employee_id = Column(Integer, nullable=False)
     room_number = Column(Integer, nullable=False)
     building_name = Column(String(5), nullable=False)
 
-
-    __table_args__ = (ForeignKeyConstraint([room_number, building_name],
-                                            ['rooms.number', 'rooms.building_name']), {})
-
-#orders = relationship("Order") #
-#customer: Customer = relationship("Customer", back_populates="orders")
-#               customer_id = Column('customer_id', Integer, ForeignKey('customers.customer_id'),
-       #         primary_key=True, nullable=False)
+    table_args2 = (UniqueConstraint(request_date, employee_id, room_number, building_name, name="rr_uk_01"),)
+    table_args = (ForeignKeyConstraint([room_number, building_name], ['rooms.number', 'rooms.building_name']),{})
+    table_args1 = (ForeignKeyConstraint([employee_id],['employees.id']),{})
 
 
-    key_issue = relationship("key_issues", back_populates='room_request')
-    room = relationship("rooms", back_populates='employee_list')
-    employee = relationship("employees", back_populates='room_list')
+
+    key_issue = relationship("key_issues", back_populates='room_request') #one-to-one with key_issues
+    # room = relationship("rooms", back_populates='employee_list')
+    # employee = relationship("employees", back_populates='room_list')
 
     def __init__(self,  id:Integer, room):
         self.employee_id=id
