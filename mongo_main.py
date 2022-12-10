@@ -138,7 +138,7 @@ if __name__=='__main__':
             print("Creating a key")
             hook = 0
         #     q = sess.query(hooks.hook_id).filter(hooks.hook_id == hook)
-        
+
         #     while not sess.query(q.exists()).scalar():
         #         hook = int(input("\n\n\nValid hook ID to make a copy of: "))
         #         q = sess.query(hooks.hook_id).filter(hooks.hook_id == hook)
